@@ -1,21 +1,35 @@
 import twitter
 from random import shuffle
+import os
 
-api = twitter.Api(consumer_key = 'mFM3eWa7vYYak51hBoGEx4D86',
-                  consumer_secret = '39xk2sZtT911PdGt75Q4CV9pytfgrKQa9EM2P2UhlUT9zPd52S',
-                  access_token_key = '3587640499-dD0bW4njxkZBh6P8Pq69AywtiwQdmPwce86hNfg',
-                  access_token_secret = 'SRRpR2YuBHSoRr2J1hk5L2OwcrFNZc2R98bRMHl0XHcVP')
+def main():
+    myAcctData = getAcctData()
 
-Jaden = api.GetUserTimeline(262794965)
+    tweet = twitter.Api(consumer_key = myAcctData['consumer_key'],
+                      consumer_secret = myAcctData['consumer_secret'],
+                      access_token_key = myAcctData['access_token_key'],
+                      access_token_secret = myAcctData['access_token_secret'])
 
-for status in Jaden:
-    words = status.text.split(' ')
-    words_to_use = [word for word in words if 'http' not in word]
-    shuffle(words_to_use)
-    new_status = ' '.join(words_to_use)
-    jadens_genius = api.PostMedia(new_status, 'http://i.imgur.com/y0GDcOv.png')
-    print jadens_genius
-    break
+    Jaden = tweet.GetUserTimeline(262794965)
 
+    for status in Jaden:
+        words = status.text.split(' ')
+        words_to_use = [word for word in words if 'http' not in word]
+        shuffle(words_to_use)
+        new_status = ' '.join(words_to_use)
+        jadens_genius = tweet.PostMedia(new_status, 'http://i.imgur.com/y0GDcOv.png')
+        break
 
+def getAcctData():
+    # Get Oauth info from file
+    keyfile = os.environ.get('BOTPATH') + '/keyfile.txt'
+    Odict = {}
+    lines = [line.strip() for line in open(keyfile)]
+    for line in lines:
+        key, value = tuple(line.split('='))
+        Odict[key] = value
+        print "%s: %s" % (key, value)
+    return Odict
+
+main()
     
