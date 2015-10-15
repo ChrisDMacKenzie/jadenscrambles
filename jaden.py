@@ -25,7 +25,7 @@ def main():
         print time, age, startTime
         new_tweets = 0
         tweet_list = []
-        if (age.seconds < 3600):
+        if (age.seconds < 3600 and time.day == startTime.day):
             words = status.text.split(' ')
             words_to_use = [word for word in words if 'http' not in word]
             shuffle(words_to_use)
@@ -53,7 +53,7 @@ def parseTime(tweet, startTime):
     return datetime.strptime(strTime, '%a %b %d %H:%M:%S %Y')
 
 def LogTweets(runTime, tweets, tweet_list, orig_tweet_time):
-    logfile = open(botpath + '/log.txt', 'w')
+    logfile = open(botpath + '/log.txt', 'a')
     logfile.write("Running at: %s\n" % runTime)
     logfile.write("Made %d new tweet(s):" % tweets)
     for tweet in tweet_list:
