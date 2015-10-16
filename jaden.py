@@ -18,13 +18,14 @@ def main():
 
     startTime = datetime.now()
 
+    new_tweets = 0
+    tweet_list = []
+
     for status in reversed(Jaden[0:10]):
         
         time = parseTime(status, startTime)
         age = startTime - time
         print time, age, startTime
-        new_tweets = 0
-        tweet_list = []
         if (age.seconds < 3600 and time.day == startTime.day):
             words = status.text.split(' ')
             words_to_use = [word for word in words if 'http' not in word]
@@ -33,7 +34,8 @@ def main():
             jadens_genius = tweet.PostMedia(new_status, 'http://i.imgur.com/y0GDcOv.png')
             new_tweets += 1
             tweet_list.append(jadens_genius.text)
-        LogTweets(startTime, new_tweets, tweet_list, time)
+    
+    LogTweets(startTime, new_tweets, tweet_list, time)
 
 def getAcctData():
     # Get Oauth info from file
@@ -55,10 +57,10 @@ def parseTime(tweet, startTime):
 def LogTweets(runTime, tweets, tweet_list, orig_tweet_time):
     logfile = open(botpath + '/log.txt', 'a')
     logfile.write("Running at: %s\n" % runTime)
-    logfile.write("Made %d new tweet(s):" % tweets)
+    logfile.write("Made %d new tweet(s):\n\n" % tweets)
     for tweet in tweet_list:
         tweet = tweet.encode('utf-8')
-        logfile.write("\n\n\t%s" % tweet)
+        logfile.write("\t%s\n" % tweet)
         logfile.write("\n\tOriginal status at %s\n\n" % orig_tweet_time)
     logfile.close()
 
